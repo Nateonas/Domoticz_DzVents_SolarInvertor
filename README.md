@@ -2,6 +2,7 @@
 READ Solar power/energy from Ginlong, Omnik Solar, Solarman and Trannergy Invertors forward to kWhcounter in domoticz 
 
 READ Solar power/energy from invertor and forward to kWhcounter in domoticz
+
 This script will work with Ginlong, Omnik Solar, Solarman and Trannergy Inverters
 that have a response to http://<invertor-ip-address>/js/status.js
 Check this URL in your browser to see if your invertor responds to this address
