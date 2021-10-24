@@ -1,7 +1,7 @@
 # Domoticz_DzVents_SolarInvertor
 READ Solar power/energy from Ginlong, Omnik Solar, Solarman and Trannergy Invertors forward to kWhcounter in domoticz 
 
-<strong>This script will work with Ginlong, Omnik Solar, Solarman and Trannergy Inverters that have a response to http://invertor-ip-address/js/status.js</strong>
+<strong>This script will work with Ginlong, Omnik Solar, Solarman and Trannergy Inverters that have a response to<br>http://invertor-ip-address/js/status.js</strong>
 
 Check this URL in your browser to see if your invertor responds to this address. Response must include "myDeviceArray[0]" in the first line after "var version".
 
@@ -15,4 +15,4 @@ If you have a status.js, then you can add this dzVents-script to Domoticz:<br>
 5- Remove the template-text and paste the text from dz_SolarInvertor.lua<br>
 6- update ip, user, pw and idx (no need to change scriptVar)<br>
 7- Save as the script as "dzVents_SolarInvertor"<br><br>
-(8- Temporarily uncomment the debug loglevel to see the full logging in de domoticz-log)<br>
+(8- Temporarily uncomment the debug loglevel to see the full logging in the domoticz-log)<br>
