@@ -1,5 +1,8 @@
 --[[
+DZ_SOLARINVERTOR
 READ Solar power/energy from invertor and forward to kWhcounter in domoticz
+dzVents-scripts for Domoticz
+Tested on version Domoticz 2024.4 Raspberry Pi 3 (bullseye)
 
 This script will work with Ginlong, Omnik Solar, Solarman and Trannergy Inverters
 that have a response to http://<invertor-ip-address>/js/status.js
@@ -13,14 +16,20 @@ If you have a status.js, then you can add this dzVents-script to Domoticz:
 2- Edit properties, change type from "Usage" to "Return"
 3- Write down the idx
 
-4- Setup -> More options -> Events -> Add automation script -> dzVents -> Minimal
-5- Remove the template-text and paste this script
-6- update ip, user, pw and idx (no need to change scriptVar)
-7- Save as the script as "dzVents_SolarInvertor"
+4-  Setup -> More options -> User variables
+5- Create string variable dz_SolarInvertor_username, enter username for the invertor
+6- Create string variable dz_SolarInvertor_password, enter username for the invertor
+7- Create string variable dz_SolarInvertor_IP, enter IP-address for the invertor
+
+8- Setup -> More options -> Events -> Add automation script -> dzVents -> Minimal
+9- Remove the template-text and paste this script
+10- Enter the idx of the virtual device in the user defaults below
+10- Save as the script as "dzVents_SolarInvertor"
+
 
 Author  : Nateonas
-Date    : 2024-05-24
-Version : 2 (added easy logging)
+Date    : 2024-05-25
+Version : 3 (ip, username, password in user variables)
 Source  : initial
 
 !! HELP !!
@@ -31,11 +40,13 @@ https://github.com/Nateonas
 ]]
 
 --  Customise user defaults        
-local ip               = '127.0.0.1'  -- ip address of the solar inverter webinterface
-local user             = 'username'      -- user name for solar inverter webinterface
-local pw               = 'password'      -- password for solar inverter webinterface
-local kWhcounter_idx   =  0           -- idx of the virtual device "Electic (Instant+Counter)"
-local scriptVar        = 'SolarYield'    -- name for logging and http-callback, no need to change
+local kWhcounter_idx =  0                       -- idx of the virtual device "Electic (Instant+Counter)"
+
+-- Don't change the  user defaults below 
+local uv_ip          = 'dz_SolarInvertor_IP'       -- user variable name for invertor IP-address
+local uv_user        = 'dz_SolarInvertor_username' -- user variable name for invertor username
+local uv_pw          = 'dz_SolarInvertor_password' -- user variable name for invertor password
+local scriptVar      = 'SolarYield'                -- name for logging and http-callback, no need to change
 
 return {
 	on = {
@@ -75,9 +86,13 @@ return {
 
 --  Handle event: Request data from invertor on timer event
         if event.isTimer then
-            requestURL = 'http://'..user..':'..pw..'@'..ip..'/js/status.js'
+            local user  = domoticz.variables(uv_user).value
+            local pw    = domoticz.variables(uv_pw).value
+            local ip    = domoticz.variables(uv_ip).value
+            requestURL  = 'http://'..user..':'..pw..'@'..ip..'/js/status.js'
+            dlog ( requestURL )
             domoticz.openURL({
-                url = requestURL,
+                url      = requestURL,
                 callback = scriptVar
             })
         end
@@ -95,7 +110,7 @@ return {
             
             sdata = split(idata, ",")
             for key, value in pairs(sdata) do
-                dlog( key..'='..value )
+                dlog ( key..'='..value )
             end
 
             powerW = sdata[6]     -- Current power in W
